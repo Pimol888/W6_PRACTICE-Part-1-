@@ -1,5 +1,4 @@
 import '../model/post.dart';
-
 import 'post_repository.dart';
 
 class MockPostRepository extends PostRepository {

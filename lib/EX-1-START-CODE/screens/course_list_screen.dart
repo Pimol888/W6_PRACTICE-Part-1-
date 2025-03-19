@@ -1,57 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../models/course.dart';
+import '../provider/courses_provider.dart';
 import 'course_screen.dart';
 
 const Color mainColor = Colors.blue;
 
-class CourseListScreen extends StatefulWidget {
+class CourseListScreen extends StatelessWidget {
   const CourseListScreen({super.key});
 
-  @override
-  State<CourseListScreen> createState() => _CourseListScreenState();
-}
-
-class _CourseListScreenState extends State<CourseListScreen> {
-  final List<Course> _allCourses = [Course(name: 'HTML'), Course(name: 'JAVA')];
-
-  void _editCourse(Course course) async {
+  void _editCourse(BuildContext context ,String courseID) async {
     await Navigator.of(context).push<Course>(
-      MaterialPageRoute(builder: (ctx) => CourseScreen(course: course)),
+      MaterialPageRoute(builder: (ctx) => CourseScreen(courseID: courseID)),
     );
-
-    setState(() {
-      // trigger a rebuild
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Consumer<CourseProvider>(builder: (context,courseProvider,child){
+      
+      List<Course> allCourses = courseProvider.getCourses;
+
+      return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: mainColor,
         title: const Text('SCORE APP', style: TextStyle(color: Colors.white)),
       ),
       body: ListView.builder(
-        itemCount: _allCourses.length,
+        itemCount: allCourses.length,
         itemBuilder:
             (ctx, index) => Dismissible(
-              key: Key(_allCourses[index].name),
+              key: Key(allCourses[index].courseID!),
               child: CourseTile(
-                course: _allCourses[index],
+                course: allCourses[index],
                 onEdit: _editCourse,
               ),
             ),
       ),
     );
-  }
+ 
+    });
+    }
 }
 
 class CourseTile extends StatelessWidget {
-  const CourseTile({super.key, required this.course, required this.onEdit});
+  const CourseTile({super.key,required this.onEdit,required this.course});
 
+  final Function(BuildContext,String) onEdit;
   final Course course;
-  final Function(Course) onEdit;
 
   int get numberOfScores => course.scores.length;
 
@@ -73,7 +70,7 @@ class CourseTile extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(5.0),
           child: ListTile(
-            onTap: () => onEdit(course),
+            onTap:() => onEdit(context,course.courseID!),
             title: Text(course.name),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

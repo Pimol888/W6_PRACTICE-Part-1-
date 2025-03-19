@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../models/course.dart';
 
 const Color mainColor = Colors.blue;
@@ -60,6 +59,7 @@ class _CourseScoreFormState extends State<CourseScoreForm> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(

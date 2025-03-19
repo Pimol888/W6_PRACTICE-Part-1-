@@ -1,12 +1,14 @@
+import 'package:uuid/uuid.dart';
+
 class Course {
-  Course({required this.name});
-
-  final String name;
-  final List<CourseScore> scores = [];
-
-  void addScore(CourseScore score) {
-    scores.add(score);
+  Course({required this.name,this.courseID}){
+    courseID ??= Uuid().v4();
   }
+
+  String? courseID;
+  final String name;
+
+  final List<CourseScore> scores = [];
 
   bool get hasScore => scores.isNotEmpty;
 
